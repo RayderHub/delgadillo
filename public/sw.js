@@ -1,13 +1,15 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v12';
+var CACHE_STATIC_NAME = 'static-v13';
 var CACHE_DYNAMIC_NAME = 'dynamic-v6';
 var STATIC_FILES = [
   '/',
   '/index.html',
   '/offline.html',
   '/manifest.json',
+  '/src/images/icons/icon-192x192.png',
+  '/src/images/icons/icon-512x512.png',
   '/src/js/app.js',
   '/src/js/feed.js',
   '/src/js/idb.js',
