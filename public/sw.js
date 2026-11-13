@@ -1,7 +1,7 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v11';
+var CACHE_STATIC_NAME = 'static-v12';
 var CACHE_DYNAMIC_NAME = 'dynamic-v6';
 var STATIC_FILES = [
   '/',
@@ -9,13 +9,14 @@ var STATIC_FILES = [
   '/offline.html',
   '/manifest.json',
   '/src/js/app.js',
-          '/src/js/feed.js',
-          '/src/js/idb.js',
-          '/src/css/app.css',
-          '/src/css/feed.css',
-          'https://fonts.googleapis.com/css?family=Roboto:400,700',
-          'https://fonts.googleapis.com/icon?family=Material+Icons',
-          'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css'
+  '/src/js/feed.js',
+  '/src/js/idb.js',
+  '/src/css/app.css',
+  '/src/css/feed.css',
+  'https://fonts.googleapis.com/css?family=Roboto:400,700',
+  'https://fonts.googleapis.com/icon?family=Material+Icons',
+  'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css',
+  'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.min.js'
 ];
 
 

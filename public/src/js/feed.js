@@ -81,10 +81,11 @@ function createCard(data) {
   // Utilizar imagen nueva para publicaciones
   // antiguas que tengan URLs incorrectas.
 
-  var imagenPublicacion = data.image || imageUrl;
+  var imagenPublicacion = data.image;
 
-  if (imagenPublicacion.indexOf('sf-boat.jpg') !== -1) {
-    imagenPublicacion = imageUrl;
+  // Si no tiene imagen, o tiene 'XXXX' o la antigua de sf-boat, usamos la imagen de respaldo
+  if (!imagenPublicacion || imagenPublicacion === 'XXXX' || imagenPublicacion.indexOf('sf-boat.jpg') !== -1) {
+    imagenPublicacion = '/src/images/main-image.jpg';
   }
 
   cardTitle.style.backgroundImage = 'url("' + imagenPublicacion + '")';
