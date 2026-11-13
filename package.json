@@ -1,0 +1,14 @@
+{
+  "name": "Proyecto UTEQGram",
+  "version": "1.0.0",
+  "description": "App sencilla parecida a Instagram",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server public -c-1",
+    "deploy:firebase": "firebase deploy --only hosting",
+    "deploy:vercel": "vercel --prod"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

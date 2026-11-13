@@ -1,0 +1,26 @@
+{
+  "name": "UTEQGram",
+  "short_name": "UTEQGram",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#3f51b5",
+  "description": "App para compartir fotos con soporte offline y Firebase",
+  "dir": "ltr",
+  "lang": "es-ES",
+  "icons": [
+    {
+      "src": "/src/images/main-image-sm.jpg",
+      "type": "image/jpeg",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/src/images/main-image.jpg",
+      "type": "image/jpeg",
+      "sizes": "512x512"
+    }
+  ]
+}
+
