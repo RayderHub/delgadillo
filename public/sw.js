@@ -1,7 +1,7 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v14';
+var CACHE_STATIC_NAME = 'static-v15';
 var CACHE_DYNAMIC_NAME = 'dynamic-v6';
 var STATIC_FILES = [
   '/',
@@ -178,7 +178,7 @@ self.addEventListener('sync', function(event) {
                 id: dt.id,
                 title: dt.title,
                 location: dt.location,
-                image: 'https://firebasestorage.googleapis.com/v0/b/uteqgram-gael.firebasestorage.app/o/main-image.jpg?alt=media&token=4fdb63e9-7b31-40e2-aa7d-b94b2ec98f69'
+                image: dt.image || 'https://xrpdeyestnhgcnoljqmv.supabase.co/storage/v1/object/public/imagenes/47478.jpg'
               })
             })
             .then(function(res) {

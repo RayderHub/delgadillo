@@ -13,7 +13,7 @@ var locationInput = document.querySelector('#location');
 
 var url = 'https://mi-proyecto-pwa-default-rtdb.firebaseio.com/post.json';
 
-var imageUrl = 'https://firebasestorage.googleapis.com/v0/b/uteqgram-gael.firebasestorage.app/o/main-image.jpg?alt=media&token=4fdb63e9-7b31-40e2-aa7d-b94b2ec98f69';
+var imageUrl = 'https://xrpdeyestnhgcnoljqmv.supabase.co/storage/v1/object/public/imagenes/47478.jpg';
 
 var networkDataReceived = false;
 
@@ -185,8 +185,50 @@ function loadPostsFromNetwork() {
     });
 }
 
-// Carga inicial desde red
+// Carga inicial desde red y sincronización pendiente
 loadPostsFromNetwork();
+syncPendingPosts();
+
+
+// ========================================
+// SINCRONIZACION MANUAL DE POSTS PENDIENTES
+// ========================================
+
+function syncPendingPosts() {
+  if ('indexedDB' in window) {
+    readAllData('sync-posts')
+      .then(function(data) {
+        if (data && data.length > 0) {
+          console.log('[Sync] Posts pendientes encontrados:', data.length);
+          data.forEach(function(dt) {
+            fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({
+                id: dt.id,
+                title: dt.title,
+                location: dt.location,
+                image: dt.image || imageUrl
+              })
+            })
+            .then(function(res) {
+              if (res.ok) {
+                console.log('[Sync] Post sincronizado:', dt.id);
+                deleteItemFromData('sync-posts', dt.id);
+                loadPostsFromNetwork();
+              }
+            })
+            .catch(function(err) {
+              console.log('[Sync] Error al sincronizar:', err);
+            });
+          });
+        }
+      });
+  }
+}
 
 
 // ========================================
@@ -200,7 +242,9 @@ window.addEventListener('offline', function() {
 
 window.addEventListener('online', function() {
   console.log('Conexión recuperada');
-  showNotification('Conexión reestablecida. Actualizando publicaciones...');
+  showNotification('Conexión reestablecida. Sincronizando datos...');
+  // Sincronizar posts pendientes si se guardaron offline
+  syncPendingPosts();
   // Carga instantánea de publicaciones e imágenes sin recargar la página
   loadPostsFromNetwork();
 });
@@ -302,27 +346,22 @@ form.addEventListener('submit', function(event) {
             return sw.sync.register('sync-new-posts');
           })
           .then(function() {
-
-            var snackbarContainer =
-              document.querySelector('#confirmation-toast');
-
-            var data = {
-              message: 'Tu publicación se ha guardado para sincronizar.'
-            };
-
-            if (snackbarContainer &&
-                snackbarContainer.MaterialSnackbar) {
-
-              snackbarContainer.MaterialSnackbar.showSnackbar(data);
-            }
-
+            showNotification('Tu publicación se ha guardado para sincronizar.');
             console.log('Publicación guardada para sincronizar');
           });
       })
       .catch(function(err) {
-        console.log('Error en sincronización:', err);
+        console.log('Error en SyncManager, guardando en IndexedDB:', err);
+        writeData('sync-posts', post).then(function() {
+          showNotification('Sin conexión: se enviará automáticamente al reconectarse.');
+        });
       });
 
+  } else if (!navigator.onLine && 'indexedDB' in window) {
+    writeData('sync-posts', post)
+      .then(function() {
+        showNotification('Sin conexión: guardado localmente para enviar al volver la red.');
+      });
   } else {
     sendData();
   }
