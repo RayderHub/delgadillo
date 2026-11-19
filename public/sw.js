@@ -1,7 +1,7 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v16';
+var CACHE_STATIC_NAME = 'static-v17';
 var CACHE_DYNAMIC_NAME = 'dynamic-v6';
 var STATIC_FILES = [
   '/',
@@ -10,6 +10,7 @@ var STATIC_FILES = [
   '/manifest.json',
   '/src/images/icons/icon-192x192.png',
   '/src/images/icons/icon-512x512.png',
+  '/src/images/post-default.jpg',
   '/src/js/app.js',
   '/src/js/feed.js',
   '/src/js/idb.js',
@@ -178,7 +179,7 @@ self.addEventListener('sync', function(event) {
                 id: dt.id,
                 title: dt.title,
                 location: dt.location,
-                image: dt.image || 'https://xrpdeyestnhgcnoljqmv.supabase.co/storage/v1/object/public/imagenes/47478.jpg'
+                image: dt.image || '/src/images/post-default.jpg'
               })
             })
             .then(function(res) {

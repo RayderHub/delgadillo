@@ -13,7 +13,7 @@ var locationInput = document.querySelector('#location');
 
 var url = 'https://mi-proyecto-pwa-default-rtdb.firebaseio.com/post.json';
 
-var imageUrl = 'https://xrpdeyestnhgcnoljqmv.supabase.co/storage/v1/object/public/imagenes/47478.jpg';
+var imageUrl = '/src/images/post-default.jpg';
 
 var networkDataReceived = false;
 
@@ -28,7 +28,7 @@ function openCreatePostModal() {
   if (typeof deferredPrompt !== 'undefined' && deferredPrompt) {
     deferredPrompt.prompt();
 
-    deferredPrompt.userChoice.then(function(choiceResult) {
+    deferredPrompt.userChoice.then(function (choiceResult) {
       console.log(choiceResult.outcome);
 
       if (choiceResult.outcome === 'dismissed') {
@@ -83,8 +83,8 @@ function createCard(data) {
 
   var imagenPublicacion = data.image;
 
-  // Si no tiene imagen, o tiene 'XXXX', o la antigua de sf-boat o uteqgram-gael, usamos la de Supabase
-  if (!imagenPublicacion || imagenPublicacion === 'XXXX' || imagenPublicacion.indexOf('sf-boat.jpg') !== -1 || imagenPublicacion.indexOf('uteqgram-gael') !== -1) {
+  // Si no tiene imagen, o tiene 'XXXX', o la antigua de sf-boat, uteqgram-gael o main-image, usamos la nueva imagen
+  if (!imagenPublicacion || imagenPublicacion === 'XXXX' || imagenPublicacion.indexOf('sf-boat.jpg') !== -1 || imagenPublicacion.indexOf('uteqgram-gael') !== -1 || imagenPublicacion.indexOf('main-image') !== -1) {
     imagenPublicacion = imageUrl;
   }
 
@@ -155,14 +155,14 @@ function showNotification(message) {
 
 function loadPostsFromNetwork() {
   return fetch(url)
-    .then(function(res) {
+    .then(function (res) {
       if (!res.ok) {
         throw new Error('Error al obtener publicaciones');
       }
 
       return res.json();
     })
-    .then(function(data) {
+    .then(function (data) {
       networkDataReceived = true;
 
       console.log('From web', data);
@@ -180,7 +180,7 @@ function loadPostsFromNetwork() {
       updateUI(dataArray);
       return dataArray;
     })
-    .catch(function(err) {
+    .catch(function (err) {
       console.log('Error al obtener datos de Firebase:', err);
     });
 }
@@ -197,10 +197,10 @@ syncPendingPosts();
 function syncPendingPosts() {
   if ('indexedDB' in window) {
     readAllData('sync-posts')
-      .then(function(data) {
+      .then(function (data) {
         if (data && data.length > 0) {
           console.log('[Sync] Posts pendientes encontrados:', data.length);
-          data.forEach(function(dt) {
+          data.forEach(function (dt) {
             fetch(url, {
               method: 'POST',
               headers: {
@@ -214,16 +214,16 @@ function syncPendingPosts() {
                 image: dt.image || imageUrl
               })
             })
-            .then(function(res) {
-              if (res.ok) {
-                console.log('[Sync] Post sincronizado:', dt.id);
-                deleteItemFromData('sync-posts', dt.id);
-                loadPostsFromNetwork();
-              }
-            })
-            .catch(function(err) {
-              console.log('[Sync] Error al sincronizar:', err);
-            });
+              .then(function (res) {
+                if (res.ok) {
+                  console.log('[Sync] Post sincronizado:', dt.id);
+                  deleteItemFromData('sync-posts', dt.id);
+                  loadPostsFromNetwork();
+                }
+              })
+              .catch(function (err) {
+                console.log('[Sync] Error al sincronizar:', err);
+              });
           });
         }
       });
@@ -235,12 +235,12 @@ function syncPendingPosts() {
 // DETECTAR ESTADO DE CONEXION (ONLINE / OFFLINE)
 // ========================================
 
-window.addEventListener('offline', function() {
+window.addEventListener('offline', function () {
   console.log('Sin conexión a internet');
   showNotification('Sin conexión a internet. Mostrando contenido en caché.');
 });
 
-window.addEventListener('online', function() {
+window.addEventListener('online', function () {
   console.log('Conexión recuperada');
   showNotification('Conexión reestablecida. Sincronizando datos...');
   // Sincronizar posts pendientes si se guardaron offline
@@ -256,13 +256,13 @@ window.addEventListener('online', function() {
 
 if ('indexedDB' in window) {
   readAllData('posts')
-    .then(function(data) {
+    .then(function (data) {
       if (!networkDataReceived) {
         console.log('From cache', data);
         updateUI(data);
       }
     })
-    .catch(function(err) {
+    .catch(function (err) {
       console.log('Error al leer IndexedDB:', err);
     });
 }
@@ -286,20 +286,20 @@ function sendData() {
       image: imageUrl
     })
   })
-  .then(function(res) {
-    if (!res.ok) {
-      throw new Error('Error al enviar los datos');
-    }
+    .then(function (res) {
+      if (!res.ok) {
+        throw new Error('Error al enviar los datos');
+      }
 
-    return res.json();
-  })
-  .then(function(data) {
-    console.log('Sent data', data);
-    window.location.reload();
-  })
-  .catch(function(err) {
-    console.log('Error al enviar datos:', err);
-  });
+      return res.json();
+    })
+    .then(function (data) {
+      console.log('Sent data', data);
+      window.location.reload();
+    })
+    .catch(function (err) {
+      console.log('Error al enviar datos:', err);
+    });
 }
 
 
@@ -307,11 +307,11 @@ function sendData() {
 // ENVIAR FORMULARIO
 // ========================================
 
-form.addEventListener('submit', function(event) {
+form.addEventListener('submit', function (event) {
   event.preventDefault();
 
   if (titleInput.value.trim() === '' ||
-      locationInput.value.trim() === '') {
+    locationInput.value.trim() === '') {
 
     alert('Por favor, ingresa un título y una ubicación.');
     return;
@@ -331,35 +331,35 @@ form.addEventListener('submit', function(event) {
   // ========================================
 
   if ('serviceWorker' in navigator &&
-      'SyncManager' in window &&
-      'indexedDB' in window) {
+    'SyncManager' in window &&
+    'indexedDB' in window) {
 
     navigator.serviceWorker.ready
-      .then(function(sw) {
+      .then(function (sw) {
 
         if (!sw.sync) {
           throw new Error('Background Sync no disponible');
         }
 
         return writeData('sync-posts', post)
-          .then(function() {
+          .then(function () {
             return sw.sync.register('sync-new-posts');
           })
-          .then(function() {
+          .then(function () {
             showNotification('Tu publicación se ha guardado para sincronizar.');
             console.log('Publicación guardada para sincronizar');
           });
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.log('Error en SyncManager, guardando en IndexedDB:', err);
-        writeData('sync-posts', post).then(function() {
+        writeData('sync-posts', post).then(function () {
           showNotification('Sin conexión: se enviará automáticamente al reconectarse.');
         });
       });
 
   } else if (!navigator.onLine && 'indexedDB' in window) {
     writeData('sync-posts', post)
-      .then(function() {
+      .then(function () {
         showNotification('Sin conexión: guardado localmente para enviar al volver la red.');
       });
   } else {
