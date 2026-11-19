@@ -83,9 +83,9 @@ function createCard(data) {
 
   var imagenPublicacion = data.image;
 
-  // Si no tiene imagen, o tiene 'XXXX' o la antigua de sf-boat, usamos la imagen de respaldo
-  if (!imagenPublicacion || imagenPublicacion === 'XXXX' || imagenPublicacion.indexOf('sf-boat.jpg') !== -1) {
-    imagenPublicacion = '/src/images/main-image.jpg';
+  // Si no tiene imagen, o tiene 'XXXX', o la antigua de sf-boat o uteqgram-gael, usamos la de Supabase
+  if (!imagenPublicacion || imagenPublicacion === 'XXXX' || imagenPublicacion.indexOf('sf-boat.jpg') !== -1 || imagenPublicacion.indexOf('uteqgram-gael') !== -1) {
+    imagenPublicacion = imageUrl;
   }
 
   cardTitle.style.backgroundImage = 'url("' + imagenPublicacion + '")';
